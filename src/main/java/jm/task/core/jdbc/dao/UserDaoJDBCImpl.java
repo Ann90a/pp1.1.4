@@ -10,18 +10,19 @@ import java.util.List;
 public class UserDaoJDBCImpl implements UserDao {
     private final Connection connection = Util.getInstance().getConnection();
 
-    public UserDaoJDBCImpl(com.mysql.cj.util.Util util) {
+    public UserDaoJDBCImpl() {
 
     }
+
     @Override
     public void createUsersTable() {
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS users" +
-                    "(id BIGINT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255), lastname VARCHAR(255), age INT)");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS users" + "(id BIGINT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(255), lastname VARCHAR(255), age INT)");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     @Override
     public void dropUsersTable() {
         try (Statement statement = connection.createStatement()) {
@@ -30,8 +31,9 @@ public class UserDaoJDBCImpl implements UserDao {
             g.printStackTrace();
         }
     }
+
     @Override
-    public void saveUser(String name, String lastName, byte age) throws RuntimeException {
+    public void saveUser(String name, String lastName, byte age) {
         String sql = "INSERT INTO users (name, lastname, age) VALUES (?, ?, ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, name);
@@ -43,6 +45,7 @@ public class UserDaoJDBCImpl implements UserDao {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public void removeUserById(long id) {
         try {
@@ -54,6 +57,7 @@ public class UserDaoJDBCImpl implements UserDao {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
@@ -61,15 +65,14 @@ public class UserDaoJDBCImpl implements UserDao {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT name, lastname, age FROM users");
             while (resultSet.next()) {
-                userList.add(new User(resultSet.getString("name"),
-                        resultSet.getString("lastname"),
-                        resultSet.getByte("age")));
+                userList.add(new User(resultSet.getString("name"), resultSet.getString("lastname"), resultSet.getByte("age")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return userList;
     }
+
     @Override
     public void cleanUsersTable() {
         try {

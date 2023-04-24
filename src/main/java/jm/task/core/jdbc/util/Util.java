@@ -19,11 +19,7 @@ public class Util {
         try {
             if (null == conn || conn.isClosed()) {
                 Properties props = getProps();
-                conn = DriverManager
-                        .getConnection(
-                                props.getProperty("url"),
-                                props.getProperty("username"),
-                                props.getProperty("password"));
+                conn = DriverManager.getConnection(props.getProperty("url"), props.getProperty("username"), props.getProperty("password"));
             }
         } catch (SQLException | IOException e) {
             e.printStackTrace();
